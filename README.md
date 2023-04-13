@@ -1,2 +1,0 @@
-# ASWorkflow
-Adaptive_Sampling_Workflow
