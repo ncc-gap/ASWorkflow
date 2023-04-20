@@ -107,15 +107,23 @@ NANOMONSV_CONTROL_PREFIX=$PWD/downloads/nanomonsv/control_prefix/20210510_210428
 ```
 
 ### Glimpse
-### Download conrtol_panel
-
+### Download conrtol_panel and make vcf
 ```
-mkdir -p $PWD/downloads/glimpse
+mkdir -p $PWD/downloads/glimpse 
 for i in {21..22} 
 do
+    PANEL_VCF=$PWD/downloads/glimpse/CCDG_14151_B01_GRM_WGS_2020-08-05_chr${i}.filtered.shapeit2-duohmm-phased.vcf.gz
+    REFBCF=$PWD/downloads/glimpse/1000GP.chr${i}.noNA12878.bcf
+    REFVCF=$PWD/downloads/glimpse/1000GP.chr${i}.noNA12878.vcf.gz
+    REFTSV=$PWD/downloads/glimpse/1000GP.chr${i}.noNA12878.tsv.gz
     wget http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000G_2504_high_coverage/working/20201028_3202_phased/CCDG_14151_B01_GRM_WGS_2020-08-05_chr${i}.filtered.shapeit2-duohmm-phased.vcf.gz{,.tbi} \
-    -O  $PWD/downloads/glimpse/CCDG_14151_B01_GRM_WGS_2020-08-05_chr${i}.filtered.shapeit2-duohmm-phased.vcf.gz{,.tbi}
+    -O  ${PANEL_VCF}
+    singularity exec $PWD/image/glimpse_v1.1.1.sif sh -c \
+    "bcftools norm -m -any ${PANEL_VCF} -Ou --threads 4 | bcftools view -m 2 -M 2 -v snps -s ^NA12878,NA12891,NA12892 --threads 4 -Ob -o ${REFBCF} && \
+    bcftools index -f ${REFBCF} --threads 4 && \
+    bcftools norm -m -any ${PANEL_VCF} -Ou --threads 4 | bcftools view -G -m 2 -M 2 -v snps -Oz -o ${REFVCF} && \
+    bcftools index -f ${REFVCF} --threads 4 && \
+    bcftools query -f'%CHROM\t%POS\t%REF,%ALT\n' ${REFVCF} | bgzip -c > ${REFTSV} && \
+    tabix -s1 -b2 -e2 ${REFTSV}"
 done
-GLIMPSE_PANEL_VCF_DIR=$PWD/downloads/glimpse
 ```
-
