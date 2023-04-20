@@ -78,7 +78,7 @@ wget ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/HGSVC3/working/20
 
 ### Download reference
 ```
-mkdir $PWD/reference
+mkdir -p $PWD/reference
 wget https://storage.googleapis.com/genomics-public-data/resources/broad/hg38/v0/Homo_sapiens_assembly38.fasta \
   -O $PWD/reference/Homo_sapiens_assembly38.fasta
 wget https://storage.googleapis.com/genomics-public-data/resources/broad/hg38/v0/Homo_sapiens_assembly38.fasta.fai \
@@ -95,6 +95,15 @@ singularity exec $PWD/image/minimap2_v2.22_2.sif sh -c \
   -o $PWD/downloads/nanomonsv/control_bam/20210510_210428_21-lee-006_PCT0053_2-A9-D9_guppy-5.0.11-sup-prom.bam && \
   samtools index $PWD/downloads/nanomonsv/control_bam/20210510_210428_21-lee-006_PCT0053_2-A9-D9_guppy-5.0.11-sup-prom.bam"
 NANOMONSV_CONTROL_BAM=$PWD/downloads/nanomonsv/control_bam/20210510_210428_21-lee-006_PCT0053_2-A9-D9_guppy-5.0.11-sup-prom.bam
+```
+
+### Make control prefix
+```
+mkdir -p $PWD/downloads/nanomonsv/control_prefix
+singularity exec $PWD/image/nanomonsv_v0.5.0.sif sh -c \
+  "nanomonsv parse downloads/nanomonsv/control_bam/20210510_210428_21-lee-006_PCT0053_2-A9-D9_guppy-5.0.11-sup-prom.bam \
+   $PWD/downloads/nanomonsv/control_prefix/20210510_210428_21-lee-006_PCT0053_2-A9-D9_guppy-5.0.11-sup-prom"
+NANOMONSV_CONTROL_PREFIX=$PWD/downloads/nanomonsv/control_prefix/20210510_210428_21-lee-006_PCT0053_2-A9-D9_guppy-5.0.11-sup-prom
 ```
 
 ### Glimpse
