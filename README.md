@@ -126,4 +126,5 @@ do
     bcftools query -f'%CHROM\t%POS\t%REF,%ALT\n' ${REFVCF} | bgzip -c > ${REFTSV} && \
     tabix -s1 -b2 -e2 ${REFTSV}"
 done
+GLIMPSE_PANEL_VCF_DIR=$PWD/downloads/glimpse
 ```
