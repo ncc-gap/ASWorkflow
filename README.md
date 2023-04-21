@@ -110,7 +110,7 @@ NANOMONSV_CONTROL_PREFIX=$PWD/downloads/nanomonsv/control_prefix/20210510_210428
 ### Download conrtol_panel and make vcf
 ```
 mkdir -p $PWD/downloads/glimpse 
-for i in {21..22} 
+for i in {1..22} 
 do
     PANEL_VCF=$PWD/downloads/glimpse/CCDG_14151_B01_GRM_WGS_2020-08-05_chr${i}.filtered.shapeit2-duohmm-phased.vcf.gz
     REFBCF=$PWD/downloads/glimpse/1000GP.chr${i}.noNA12878.bcf
