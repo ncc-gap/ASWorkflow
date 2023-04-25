@@ -37,7 +37,7 @@ The workflow is designed to cover the region surrounding TP53 gene.
 
 __Comment__
 
-Each analysis uses a singularity image, so please make sure you can use __Singularity__ beforehand.
+Each analysis uses a __singularity image__, so please make sure you can use __Singularity__ beforehand.
 
 __1. Download this repogitry__
 
@@ -50,22 +50,24 @@ cd snakemake/tutorial
 
 __2. Install snakemake__
 
-We use __Snakemake__ to control the workflow, so please install Snakemake beforehand.
+We also use __Snakemake__ to control the workflow, so please install __Snakemake__ beforehand.
 
 Please see snakemake official document.
 
-```
-pip3 install snakemake
-```
-or
 ```
 virtualenv -p python3 .venv
 $ source .venv/bin/activate
 $ pip install snakemake
 ```
+or
+```
+pip3 install snakemake
+```
 
 __3. Pull singularity images__
-PWD:snakemake/tutorial
+
+__note that PWD is snakemake/tutorial__
+
 ```
 mkdir $PWD/image
 singularity pull $PWD/image/pepper_deepvariant_r0.8.sif docker://kishwars/pepper_deepvariant:r0.8
@@ -76,23 +78,55 @@ singularity pull $PWD/image/whatshap_v1.4.0.sif docker://wn505/whatshap:v1.4.0
 singularity pull $PWD/image/nanopolish_v0.13.3.sif docker://aokad/nanopolish:0.0.1
 ```
 
-__4. Download tools,control_panels.__
+__4. Download input FAST5, input FASTQ files and control data from zenodo__
+
+__Please put `input FAST5` and `input FASTQ` files in separate folders in the `input directory` under the `tutorial directory`__
+
+__Please put `control` files (`control_bam` etc ) in seperate folders in the `downloads/nanomonsv directory` under the `tutorial directory`__
+
+A bam file (downloadable from zenodo), from which only the region around TP53 is extracted from the nanopore sequencing data of the THP1 cell line, can be used for `control_bam` of nanomonsv.
+
+
+__Please refer to the directory structure.__
 
 ```
-bash preparation.sh
+Zenodo page is now preparing.
 ```
 
-### For full-scale use, Please refer to the following "Download Tool, control_panels" to download further necessary data__
+__5. Download tools and control data.__
+
+
+__To obtain the tools and panel data needed to run the tutorial, you can use the following script__
+
+
+__Note that the following script uses the downloaded control data, so be sure to execute No.3(Pull singularity images) and No.4(Download input FAST5, input FASTQ files and control data from zenodo) before executing this No.5(Download tools and control data).__
+
+
+__This command will generate several files under the downloads directory.__
+
+Before executing the following commands, __please make sure that singularity is available__.
+
+```
+bash preparation.sh ${control_bam}
+```
+
+__6.Additions to config__
+
+```
+vi config.cfg
+
+1. Path of downloaded input_fastq
+
+2. Path of downloaded input_fast5 
+
+3. Path of downloaded control_bam(for nanomonsv)
+```
+
+
+## For full-scale use, Please refer to the following "Download Tool, control_panels" to download further necessary data__
 
 __Please see the `Download tools,control_panels` section at the bottom of this page__
 
-
-
-__5. Download FAST5 and FASTQ file from zenodo
-
-```
-Now preparing
-```
 
 ### Final directory structure of the tutorial
 ```
@@ -101,13 +135,26 @@ Now preparing
 ├── config.yaml
 ├── downloads
 │   ├── glimpse
+│   │   ├──CCDG_14151_B01_GRM_WGS_2020-08-05_chr17.filtered.shapeit2-duohmm-phased.vcf.gz
+│   │   └──CCDG_14151_B01_GRM_WGS_2020-08-05_chr17.filtered.shapeit2-duohmm-phased.vcf.gz.tbi
 │   ├── nanomonsv
 │   │   ├── control_bam
+│   │   │   ├── TP53_range_5M_THP.sorted.bam
+│   │   │   └── TP53_range_5M_THP.sorted.bam.bai
 │   │   ├── control_panel
+│   │   │   ├── hprc_year1_data_freeze_nanopore_minimap2_2_24_merge_control
+│   │   │   ├── ..........
+│   │   │   └── hprc_year1_data_freeze_nanopore_minimap2_2_24_merge_control.rearrangement.sorted.bedpe.gz.tbi
 │   │   └── control_prefix
+│   │   │   ├── TP53_range_5M_THP.sorted.bp_info.sorted.bed.gz
+│   │   │   ├── ..........
+│   │       └── TP53_range_5M_THP.sorted.rearrangement.sorted.bedpe.gz.tbi
 │   └── nanopolish
 │       └──ont-vbz-hdf-plugin-1.0.1-Linux
 ├── image
+│   ├── glimpse_v1.1.1.sif
+│   ├── ..........
+│   └── whatshap_v1.4.0.sif
 ├── input
 │   ├── fast5_dir
 │   │   └── CMK
@@ -147,11 +194,15 @@ Now preparing
 ## How to run
 
 ### For dry run
+__Please not to forget to activate pyenv, if you have installed snakemake within pyenv.__
+
 ```
+source {path/to/dir/bin/activate}
+
 snakemake -np --verbose
 ```
 
-if you would like to create dag.png
+if you create dag.png
 
 ```
 snakemake --dag | dot -Tpng > dag.png
@@ -162,8 +213,10 @@ snakemake --dag | dot -Tpng > dag.png
 snakemake  --cores all --verbose --use-singularity --singularity-args "-B /home"
 ```
 
+### Precise instruction of downloaing tools,control_panels.
 
-### Download tools,control_panels.
+__If you have already perfomed tutorial, you just need to execute 4.2.3(Download fastq), 4.2.5(Make control prefix) and 4.3.1(Download conrtol_panel and make vcf).__
+
 
 #### __4.1 nanopolish__
 
@@ -178,23 +231,7 @@ HDF5_PLUGIN_PATH=$PWD/downloads/nanopolish/ont-vbz-hdf-plugin-1.0.1-Linux/usr/lo
 
 #### __4.2 nanomonsv__
 
-__4.2.1 Download control_panel__
-```
-mkdir -p $PWD/downloads/nanomonsv/control_panel
-wget https://zenodo.org/api/files/5c116b75-6ef0-4445-9fa8-c5989639da5f/hprc_year1_data_freeze_nanopore_minimap2_2_24_merge_control.tar.gz \
--O $PWD/downloads/nanomonsv/control_panel/hprc_year1_data_freeze_nanopore_minimap2_2_24_merge_control.tar.gz
-tar -xvf $PWD/downloads/nanomonsv/control_panel/hprc_year1_data_freeze_nanopore_minimap2_2_24_merge_control.tar.gz -C $PWD/downloads/nanomonsv/control_panel/
-NANOMONSV_CONTROL_PANEL=$PWD/downloads/nanomonsv/control_panel/hprc_year1_data_freeze_nanopore_minimap2_2_24_merge_control/hprc_year1_data_freeze_nanopore_minimap2_2_24_merge_control
-```
-
-__4.2.2 Download fastq__
-```
-mkdir -p $PWD/downloads/nanomonsv/control_bam
-wget ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/HGSVC3/working/20211013_ONT_Rebasecalled/NA18989/20210510_210428_21-lee-006_PCT0053_2-A9-D9_guppy-5.0.11-sup-prom_fastq_pass.fastq.gz \
--O $PWD/downloads/nanomonsv/control_bam/20210510_210428_21-lee-006_PCT0053_2-A9-D9_guppy-5.0.11-sup-prom_fastq_pass.fastq.gz
-```
-
-__4.2.3 Download reference__
+__4.2.1 Download reference__
 ```
 mkdir -p $PWD/reference
 wget https://storage.googleapis.com/genomics-public-data/resources/broad/hg38/v0/Homo_sapiens_assembly38.fasta \
@@ -203,9 +240,23 @@ wget https://storage.googleapis.com/genomics-public-data/resources/broad/hg38/v0
   -O $PWD/reference/Homo_sapiens_assembly38.fasta.fai
 ```
 
-__4.2.4 Alignment(Make bam file)__
+__4.2.2 Download control_panel__
+```
+mkdir -p $PWD/downloads/nanomonsv/control_panel
+wget https://zenodo.org/api/files/5c116b75-6ef0-4445-9fa8-c5989639da5f/hprc_year1_data_freeze_nanopore_minimap2_2_24_merge_control.tar.gz \
+-O $PWD/downloads/nanomonsv/control_panel/hprc_year1_data_freeze_nanopore_minimap2_2_24_merge_control.tar.gz
+tar -xvf $PWD/downloads/nanomonsv/control_panel/hprc_year1_data_freeze_nanopore_minimap2_2_24_merge_control.tar.gz -C $PWD/downloads/nanomonsv/control_panel/
+NANOMONSV_CONTROL_PANEL=$PWD/downloads/nanomonsv/control_panel/hprc_year1_data_freeze_nanopore_minimap2_2_24_merge_control/hprc_year1_data_freeze_nanopore_minimap2_2_24_merge_control
+```
 
-Takes 24 hours even with qsub
+__4.2.3 Download fastq__
+```
+mkdir -p $PWD/downloads/nanomonsv/control_bam
+wget ftp://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/HGSVC3/working/20211013_ONT_Rebasecalled/NA18989/20210510_210428_21-lee-006_PCT0053_2-A9-D9_guppy-5.0.11-sup-prom_fastq_pass.fastq.gz \
+-O $PWD/downloads/nanomonsv/control_bam/20210510_210428_21-lee-006_PCT0053_2-A9-D9_guppy-5.0.11-sup-prom_fastq_pass.fastq.gz
+```
+
+__4.2.4 Alignment : Takes 24 hours even with qsub__
 ```
 singularity exec $PWD/image/minimap2_v2.22_2.sif sh -c \
   "minimap2 -ax map-ont -t 8 -p 0.1 $PWD/reference/Homo_sapiens_assembly38.fasta $PWD/downloads/nanomonsv/control_bam/20210510_210428_21-lee-006_PCT0053_2-A9-D9_guppy-5.0.11-sup-prom_fastq_pass.fastq.gz \
@@ -225,9 +276,11 @@ singularity exec $PWD/image/nanomonsv_v0.5.0.sif sh -c \
 NANOMONSV_CONTROL_PREFIX=$PWD/downloads/nanomonsv/control_prefix/20210510_210428_21-lee-006_PCT0053_2-A9-D9_guppy-5.0.11-sup-prom
 ```
 
-#### __4.3 Glimpse__
+#### __4.3 GLIMPSE__
 
 __4.3.1 Download conrtol_panel and make vcf__
+This script is based on the GLIMPSE1 tutorial but with slight modifications.
+
 ```
 mkdir -p $PWD/downloads/glimpse 
 for i in {1..22} 
@@ -236,8 +289,10 @@ do
     REFBCF=$PWD/downloads/glimpse/1000GP.chr${i}.noNA12878.bcf
     REFVCF=$PWD/downloads/glimpse/1000GP.chr${i}.noNA12878.vcf.gz
     REFTSV=$PWD/downloads/glimpse/1000GP.chr${i}.noNA12878.tsv.gz
-    wget http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000G_2504_high_coverage/working/20201028_3202_phased/CCDG_14151_B01_GRM_WGS_2020-08-05_chr${i}.filtered.shapeit2-duohmm-phased.vcf.gz{,.tbi} \
+    wget http://ftp.1000genomes.ebi.ac.uk/vol1/ftp/data_collections/1000G_2504_high_coverage/working/20201028_3202_phased/CCDG_14151_B01_GRM_WGS_2020-08-05_chr${i}.filtered.shapeit2-duohmm-phased.vcf.gz \
     -O  ${PANEL_VCF}
+    singularity exec $PWD/image/minimap2_v2.22_2.sif sh -c \
+    "tabix -p vcf ${PANEL_VCF}"
     singularity exec $PWD/image/glimpse_v1.1.1.sif sh -c \
     "bcftools norm -m -any ${PANEL_VCF} -Ou --threads 4 | bcftools view -m 2 -M 2 -v snps -s ^NA12878,NA12891,NA12892 --threads 4 -Ob -o ${REFBCF} && \
     bcftools index -f ${REFBCF} --threads 4 && \
