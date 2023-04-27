@@ -1,0 +1,64 @@
+# config.yaml
+
+chromosomes: ["17"]
+samples: ["Tutorial_CMK-86"]
+
+#Please rewrite the three places.
+
+#1.
+fastq:
+    Tutorial_CMK-86:
+    - "1.Please replace with the path to the fastq file here"
+#e.x.) -  "input/fastq/CMK-86_input_tutorial_TP53_range_5M.fastq"
+
+#2.
+fast5_dir:
+    Tutorial_CMK-86:
+    - "2.Please replace with the path to the fast5_dir here"
+#e.x.) -  "input/fast5_dir"
+
+#3.
+NANOMONSV_CONTROL_BAM: "3.Please replace with the path to the control bam file here"
+#e.x.) NANOMONSV_CONTROL_BAM: "input/control_bam/THP-1_control_tutorial_TP53_range_5M.sorted.bam"
+
+# Common_params
+ref: "reference/Homo_sapiens_assembly38.fasta"
+
+# Downloads
+NANOMONSV_CONTROL_PANEL: "downloads/nanomonsv/control_panel/hprc_year1_data_freeze_nanopore_minimap2_2_24_merge_control/hprc_year1_data_freeze_nanopore_minimap2_2_24_merge_control"
+NANOMONSV_CONTROL_PREFIX: "downloads/nanomonsv/control_prefix/THP-1_control_tutorial_TP53_range_5M.sorted"
+NANOPOLISH_HDF5_PLUGIN_PATH: "downloads/nanopolish/ont-vbz-hdf-plugin-1.0.1-Linux/usr/local/hdf5/lib/plugin"
+GLIMPSE_PANEL_DIR: "downloads/glimpse"
+
+# Singularity
+singularity_images:
+  minimap2: "image/minimap2_v2.22_2.sif"
+  pmdv: "image/pepper_deepvariant_r0.8.sif"
+  nanomonsv: "image/nanomonsv_v0.5.0.sif"
+  nanopolish: "image/nanopolish_v0.13.3.sif"
+  glimpse: "image/glimpse_v1.1.1.sif"
+  whatshap: "image/whatshap_v1.4.0.sif"
+  minimap: "image/minimap2_v2.22_2.sif"
+
+###mimimap2_params###
+MINIMAP_OPTIONS: "-ax map-ont -t 8 -p 0.1 --MD"
+SAMTOOLS_VIEW_OPTIONS: "-Shb"
+SAMTOOLS_SORT_OPTIONS: "-@ 8 -m 2G"
+SAMTOOLS_INDEX_OPTIONS: "-@ 8"
+
+###pmdv_params###
+PMDV_THREADS: 8
+PMDV_MODE: "--ont_r9_guppy5_sup"
+
+###nanomonsv_params###
+NANOMONSV_OPTIONS: "--processes 8 --single_bnd --use_racon"
+
+###nanopolish_params###
+NANOPOLISH_THREADS: 8
+
+###glimpse_params###
+
+###whatshap###
+WHATSHAP_OPTIONS: "--skip-missing-contigs --ignore-read-groups"
+WHATSHAP_SAMTOOLS_OPTIONS: "-@ 8"
+WHATSHAP_THREADS: 8
