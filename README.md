@@ -45,7 +45,7 @@ we use the `convert_bam_for_methylation.py` script (https://github.com/timplab/n
 
 ```
 git clone https://github.com/ncc-gap/ASWorkflow.git
-cd snakemake/tutorial
+cd tutorial
 ```
 
 __2. Install snakemake__
@@ -66,7 +66,7 @@ pip3 install snakemake
 
 __3. Pull singularity images__
 
-__note that PWD is snakemake/tutorial__
+__note that PWD is tutorial__
 
 ```
 mkdir $PWD/image
@@ -78,16 +78,7 @@ singularity pull $PWD/image/whatshap_v1.4.0.sif docker://wn505/whatshap:v1.4.0
 singularity pull $PWD/image/nanopolish_v0.13.3.sif docker://aokad/nanopolish:0.0.1
 ```
 
-__4. Download input FAST5, input FASTQ files and control data from zenodo__
-
-__Please put `input FAST5` and `input FASTQ` files in separate folders in the `input directory` under the `tutorial directory`__
-
-__Please put `control` files (`control_bam` etc ) in seperate folders in the `downloads/nanomonsv directory` under the `tutorial directory`__
-
-A bam file (downloadable from zenodo), from which only the region around TP53 is extracted from the nanopore sequencing data of the THP1 cell line, can be used for `control_bam` of nanomonsv.
-
-
-__Please refer to the directory structure.__
+__4. Download `input FAST5`, `input FASTQ` files and `control bam (for nanomonsv)` from zenodo__
 
 ```
 Zenodo page is now preparing.
@@ -98,28 +89,32 @@ __5. Download tools and control data.__
 
 __To obtain the tools and panel data needed to run the tutorial, you can use the following script__
 
-
-__Note that the following script uses the downloaded control data, so be sure to execute No.3(Pull singularity images) and No.4(Download input FAST5, input FASTQ files and control data from zenodo) before executing this No.5(Download tools and control data).__
-
-
-__This command will generate several files under the downloads directory.__
-
 Before executing the following commands, __please make sure that singularity is available__.
 
 ```
 bash preparation.sh ${control_bam}
 ```
 
+__This command will generate several files under the downloads directory.__
+
+__Note that the following script uses the downloaded control data, so be sure to execute No.3(Pull singularity images) and No.4(Download `input FAST5`, `input FASTQ` files and `control bam (for nanomonsv)` from zenodo) before executing this No.5(Download tools and control data).__
+
+
 __6.Additions to config__
+
+The contents of config.cfg must be rewritten in __three places__.
+1. input fastq file
+2. fast5 directory of input
+3. input control bam file (for nanomonsv)
 
 ```
 vi config.cfg
 
 1. Path of downloaded input_fastq
 
-2. Path of downloaded input_fast5 
+2. Path of downloaded input_fast5 (directory path)
 
-3. Path of downloaded control_bam(for nanomonsv)
+3. Path of downloaded control_bam (for nanomonsv)
 ```
 
 
@@ -128,27 +123,31 @@ vi config.cfg
 __Please see the `Download tools,control_panels` section at the bottom of this page__
 
 
-### Final directory structure of the tutorial
+### Final directory structure
+
 ```
-├── preparation.sh
+.
+├── REAME.md
 ├── Snakefile
 ├── config.yaml
+├── preparetion.sh
 ├── downloads
 │   ├── glimpse
 │   │   ├──CCDG_14151_B01_GRM_WGS_2020-08-05_chr17.filtered.shapeit2-duohmm-phased.vcf.gz
 │   │   └──CCDG_14151_B01_GRM_WGS_2020-08-05_chr17.filtered.shapeit2-duohmm-phased.vcf.gz.tbi
 │   ├── nanomonsv
 │   │   ├── control_bam
-│   │   │   ├── TP53_range_5M_THP.sorted.bam
-│   │   │   └── TP53_range_5M_THP.sorted.bam.bai
+│   │   │   ├── THP-1_control_tutorial_TP53_range_5M.sorted.bam (This file can be downloaded from zenodo and placed anywhere you like. 
+│   │   │   │                                                                                       Please rewrite the placed location in your config.)
+│   │   │   └── THP-1_control_tutorial_TP53_range_5M.sorted.bam.bai
 │   │   ├── control_panel
 │   │   │   ├── hprc_year1_data_freeze_nanopore_minimap2_2_24_merge_control
 │   │   │   ├── ..........
 │   │   │   └── hprc_year1_data_freeze_nanopore_minimap2_2_24_merge_control.rearrangement.sorted.bedpe.gz.tbi
 │   │   └── control_prefix
-│   │   │   ├── TP53_range_5M_THP.sorted.bp_info.sorted.bed.gz
+│   │   │   ├── THP-1_control_tutorial_TP53_range_5M.sorted.bed.gz
 │   │   │   ├── ..........
-│   │       └── TP53_range_5M_THP.sorted.rearrangement.sorted.bedpe.gz.tbi
+│   │       └── THP-1_control_tutorial_TP53_range_5M.sorted.bedpe.gz.tbi
 │   └── nanopolish
 │       └──ont-vbz-hdf-plugin-1.0.1-Linux
 ├── image
@@ -157,11 +156,11 @@ __Please see the `Download tools,control_panels` section at the bottom of this p
 │   └── whatshap_v1.4.0.sif
 ├── input
 │   ├── fast5_dir
-│   │   └── CMK
-│   │   │   └──  TP53_range_5M_read_id_20230423_CMK_0.fast5  
+│   │   └── CMK-86_input_tutorial_TP53_range_5M.fast5 (This file can be downloaded from zenodo and placed anywhere you like. 
+│   │   │   │                                                                                       Please rewrite the placed location in your config.)
 │   └── fastq
-│       └── CMK
-│           └──  TP53_range_5M_read_id_20230423_CMK.fastq
+│       └── CMK-86_input_tutorial_TP53_range_5M.fastq (This file can be downloaded from zenodo and placed anywhere you like. 
+│                                                                                        Please rewrite the placed location(directory) in your config.)
 ├── output
 │   ├── glimpse
 │   ├── minimap2
@@ -187,7 +186,7 @@ __Please see the `Download tools,control_panels` section at the bottom of this p
     │   └── snakemake_pmdv.sh
     └── whatshap
         ├── snakemake_whatshap_haplotag.sh
-        └──  snakemake_whatshap_split.sh
+        └── snakemake_whatshap_split.sh
 
 ```
 
@@ -210,7 +209,7 @@ snakemake --dag | dot -Tpng > dag.png
 
 ### For run
 ```
-snakemake  --cores all --verbose --use-singularity --singularity-args "-B /home"
+snakemake  --cores all --verbose --use-singularity
 ```
 
 ### Precise instruction of downloaing tools,control_panels.
