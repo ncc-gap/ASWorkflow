@@ -186,11 +186,18 @@ __Please see the `Download tools,control_panels` section at the bottom of this p
     │   └── snakemake_pmdv.sh
     └── whatshap
         ├── snakemake_whatshap_haplotag.sh
+<<<<<<< HEAD
         └──  snakemake_whatshap_split.sh
 
 ```
 
 
+=======
+        └── snakemake_whatshap_split.sh
+
+```
+
+>>>>>>> origin/main
 ## How to run
 
 ### For dry run
@@ -303,7 +310,40 @@ do
 done
 GLIMPSE_PANEL_VCF_DIR=$PWD/downloads/glimpse
 ```
+<<<<<<< HEAD
 ## License
 
 ASWorkflow is free for academic use only. If you are not a member of a public funded academic and/or education and/or research institution you must obtain a commercial license from National Cancer Center; please email Yuichi Shiraishi (yuishira@ncc.go.jp). 
 
+=======
+
+
+## bash
+
+1.Download this reoositry
+
+```
+git clone https://github.com/ncc-gap/ASWorkflow.git
+cd ASWorkflow
+```
+2.Download files
+
+`bash download_files.sh`
+
+3.Pull singularity image
+
+All singularity images are stored at ...
+
+4.Make config file
+
+Edit reference files, image files, and more.
+
+`vi ${config}`
+## How to run
+`bash run.sh ${input_fastq_path} ${input_fast5_dir} ${output_dir} ${config} ${sample_id}`
+
+
+## License
+
+ASWorkflow is free for academic use only. If you are not a member of a public funded academic and/or education and/or research institution you must obtain a commercial license from National Cancer Center; please email Yuichi Shiraishi (yuishira@ncc.go.jp). 
+>>>>>>> origin/main
