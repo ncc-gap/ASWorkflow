@@ -186,18 +186,10 @@ __Please see the `Download tools,control_panels` section at the bottom of this p
     │   └── snakemake_pmdv.sh
     └── whatshap
         ├── snakemake_whatshap_haplotag.sh
-<<<<<<< HEAD
-        └──  snakemake_whatshap_split.sh
-
-```
-
-
-=======
         └── snakemake_whatshap_split.sh
 
 ```
 
->>>>>>> origin/main
 ## How to run
 
 ### For dry run
@@ -286,6 +278,7 @@ NANOMONSV_CONTROL_PREFIX=$PWD/downloads/nanomonsv/control_prefix/20210510_210428
 #### __4.3 GLIMPSE__
 
 __4.3.1 Download conrtol_panel and make vcf__
+
 This script is based on the GLIMPSE1 tutorial but with slight modifications.
 
 ```
@@ -310,6 +303,8 @@ do
 done
 GLIMPSE_PANEL_VCF_DIR=$PWD/downloads/glimpse
 ```
+
+
 ## License
 
 ASWorkflow is free for academic use only. If you are not a member of a public funded academic and/or education and/or research institution you must obtain a commercial license from National Cancer Center; please email Yuichi Shiraishi (yuishira@ncc.go.jp). 
