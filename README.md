@@ -78,11 +78,8 @@ singularity pull $PWD/image/whatshap_v1.4.0.sif docker://wn505/whatshap:v1.4.0
 singularity pull $PWD/image/nanopolish_v0.13.3.sif docker://aokad/nanopolish:0.0.1
 ```
 
-__4. Download `input FAST5`, `input FASTQ` files and `control bam (for nanomonsv)` from zenodo__
+__4. Download `input FAST5`, `input FASTQ` files and `control bam (for nanomonsv)` from zenodo (https://zenodo.org/record/7867046#.ZEpAyOzP3zc)__
 
-```
-Zenodo page is now preparing.
-```
 
 __5. Download tools and control data.__
 
