@@ -328,3 +328,7 @@ Edit reference files, image files, and more.
 ## How to run
 `bash run.sh ${input_fastq_path} ${input_fast5_dir} ${output_dir} ${config} ${sample_id}`
 
+
+## License
+
+ASWorkflow is free for academic use only. If you are not a member of a public funded academic and/or education and/or research institution you must obtain a commercial license from National Cancer Center; please email Yuichi Shiraishi (yuishira@ncc.go.jp). 
